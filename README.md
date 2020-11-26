@@ -85,3 +85,9 @@ Here we use forChild() instead of forRoot(), because we’re declaring routes th
 to an imported module instead of the main App module. Otherwise, the process is the same,
 and the route definitions follow the same rules.
 ```
+
+## Task: 7.4 Route parameters
+
+1. <https://livebook.manning.com/book/angular-in-action/chapter-7/76>
+2. Example Path: ```/forums/1-announcement```
+3. Add route ```{ path: 'forums/:forum_alias', component: ForumComponent }```
