@@ -25,10 +25,6 @@ firstChild    | Contains the first ActivatedRoute in the list of this route's ch
 children      | Contains all the child routes activated under the current route.
 ```
 
-```text
-What we’ve done is include the router in our application, and we’ve used the forRoot() method to declare that we’re using the router in the main App module. It also takes a parameter, which should be an array of routes declared by this module. If you don’t pass anything here, the router won’t know about any of your routes, so it’s the way to pass configuration into the router.
-```
-
 ```typescript
 /**
  * flie: app.module.ts
@@ -51,4 +47,41 @@ const appRoutes: Routes = [
 ...
 ```
 
+```text
+What we’ve done is include the router in our application, and we’ve used the forRoot() method
+to declare that we’re using the router in the main App module. It also takes a parameter,
+which should be an array of routes declared by this module. If you don’t pass anything here,
+the router won’t know about any of your routes, so it’s the way to pass configuration into the router.
+```
+
 ## Task: 7.3 Feature modules and routing
+
+1. Ref: <<https://livebook.manning.com/book/angular-in-action/chapter-7/61>
+2. src/app/forums/forums.module.ts file and import the Router module:
+3. Add:```import { RouterModule, Routes } from '@angular/router';```
+
+```TypeScript
+/**
+ * file: forums.module.ts
+ */
+...
+import { RouterModule, Routes } from '@angular/router';
+...
+const forumsRoutes: Routes = [
+  { path: 'forums', component: ForumsComponent }
+];
+...
+imports: [
+  BrowserModule,
+  FormsModule,
+  ClarityModule.forChild(),
+ RouterModule.forChild(forumsRoutes),
+],
+
+```
+
+```text
+Here we use forChild() instead of forRoot(), because we’re declaring routes that belong
+to an imported module instead of the main App module. Otherwise, the process is the same,
+and the route definitions follow the same rules.
+```
