@@ -6,23 +6,49 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Task: 7.2 Route definitions and router setup
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+1. Ref: <https://livebook.manning.com/book/angular-in-action/chapter-7/31>
+2. run ```npm install --save @angular/router```
+3. Description  of routing properties and methods: <https://angular.io/guide/router#configuration>
 
-## Build
+```text
+url           | An Observable of the route path(s), represented as an array of strings for each part of the route path.
+data          | An Observable that contains the data object provided for the route. Also contains any resolved values from the resolve guard.
+paramMap      | An Observable that contains a map of the required and optional parameters specific to the route. The map supports retrieving single and multiple values from the same parameter.
+queryParamMap | An Observable that contains a map of the query parameters available to all routes. The map supports retrieving single and multiple values from the query parameter.
+fragment      | An Observable of the URL fragment available to all routes.
+outlet        | The name of the RouterOutlet used to render the route. For an unnamed outlet, the outlet name is primary.
+routeConfig   | The route configuration used for the route that contains the origin path.
+parent        | The route's parent ActivatedRoute when this route is a child route.
+firstChild    | Contains the first ActivatedRoute in the list of this route's child routes.
+children      | Contains all the child routes activated under the current route.
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+```text
+What we’ve done is include the router in our application, and we’ve used the forRoot() method to declare that we’re using the router in the main App module. It also takes a parameter, which should be an array of routes declared by this module. If you don’t pass anything here, the router won’t know about any of your routes, so it’s the way to pass configuration into the router.
+```
 
-## Running unit tests
+```typescript
+/**
+ * flie: app.module.ts
+ */
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+...
+const appRoutes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: '/forums', pathMatch: 'full' },
+  { path: '**', component: NotFoundComponent },
+];
+...
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ClarityModule.forRoot(),
+    ForumsModule,
+    RouterModule.forRoot(appRoutes)
+  ],
+...
+```
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Task: 7.3 Feature modules and routing
