@@ -9,8 +9,9 @@ import { Forum } from '../services/data';
 })
 export class ForumsComponent implements OnInit {
   forums: Forum[];
+  forum: Forum;
 
-  constructor(private forumsService: ForumsService) {}
+  constructor(private forumsService: ForumsService) { }
 
   ngOnInit() {
     this.forums = this.forumsService.forums;

@@ -109,7 +109,7 @@ That’s all it takes to create a link, but you can also **bind an expression wi
 ```Text
 You’ll notice in this case we’re binding a value to it (by wrapping it with the [] notation). When you bind a value, it expects an array of path segments that it will use to construct the complete URL. In this case, we’re setting the forum alias value in this array. By default, it will treat routes as relative to the current URL, which means it will append to the current route. On this page, the URL is /forums, and each link will be routed to the forum by alias, like /forums/1-announcements.
 
-"'alias': '1-announcements'" is defined in the data file.
+NOTE: "'alias': '1-announcements'" is defined in the data file.
 
 Now we need to get the route parameter information into our Forum component so it knows which forum to display. Often, you’ll use this route parameter information to call one of your services to load data, and we’ll do that here.
 
@@ -119,22 +119,23 @@ Using this service, we’ll access the current parameter information. Open src/a
 
 ```
 
-```TypeSCript
+```TypeScript
 export class ForumComponent implements OnInit {
   forum: Forum;
 
   constructor(
-    private route: ActivatedRoute,      // A
-private router: Router,                 // A
+    private route: ActivatedRoute,
+    private router: Router,
     private forumsService: ForumsService) { }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {             // B
-this.forum = this.forumsService.forum(params['forum_alias']);     // C
-if (!this.forum) this.router.navigate(['/not-found']);            // D
-});
+    this.route.params.subscribe((params: Params) => {
+      this.forum = this.forumsService.forum(params['forum_alias']);
+      if (!this.forum) {
+        this.router.navigate(['/not-found']);
+      }
+    });
   }
-}
 ```
 
 ```Text
