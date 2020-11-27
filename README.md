@@ -75,7 +75,7 @@ imports: [
   BrowserModule,
   FormsModule,
   ClarityModule.forChild(),
- RouterModule.forChild(forumsRoutes),
+  RouterModule.forChild(forumsRoutes),
 ],
 
 ```
@@ -97,17 +97,19 @@ and the route definitions follow the same rules.
 1. Add ```<a class="nav-link" routerLink="/forums"><span class="nav-text">Forums</span></a>```
 
 ```text
-In this use of routerLink, it accepts the string with the appropriate path to use. If the path starts with a forward slash, it will treat the URL as an absolute path from the domain. It could also be a relative path without the slash. This is probably the most common way to use routerLink.
+In this use of routerLink, it accepts the string with the appropriate path to use. If the **path starts with a forward slash**, it will treat the URL as an absolute path from the domain. It could also be a **relative path without the slash**. This is probably the most common way to use routerLink.
 
 When you use href with links, the browser will request a new URL from the server, which isn’t what we want.
 
-That’s all it takes to create a link, but you can also bind an expression with routerLink for more dynamic links. To demonstrate this, we’ll add a link from the forums list to load the individual forum page. Open src/forums/forums/forums.component.html (yes, I know the file path is a bit redundant) and update the table row with the NgFor to include a routerLink to link to the forum:
+That’s all it takes to create a link, but you can also **bind an expression with routerLink for more dynamic links**. To demonstrate this, we’ll add a link from the forums list to load the individual forum page. Open src/forums/forums/forums.component.html (yes, I know the file path is a bit redundant) and update the table row with the NgFor to include a routerLink to link to the forum:
 ```
 
 1. Use: ```<tr *ngFor="let forum of forums" [routerLink]="[forum.alias]">```
 
 ```Text
 You’ll notice in this case we’re binding a value to it (by wrapping it with the [] notation). When you bind a value, it expects an array of path segments that it will use to construct the complete URL. In this case, we’re setting the forum alias value in this array. By default, it will treat routes as relative to the current URL, which means it will append to the current route. On this page, the URL is /forums, and each link will be routed to the forum by alias, like /forums/1-announcements.
+
+"'alias': '1-announcements'" is defined in the data file.
 
 Now we need to get the route parameter information into our Forum component so it knows which forum to display. Often, you’ll use this route parameter information to call one of your services to load data, and we’ll do that here.
 
