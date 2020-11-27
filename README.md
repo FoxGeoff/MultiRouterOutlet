@@ -159,4 +159,109 @@ Now we need to see the threads in a single forum, and we’ll use child routes t
 
 ## Task: 7.5 Child routes
 
+```Text
+Having just one component per route can be somewhat limiting and could cause additional complexity in having to re-declare commonly used pieces across multiple components. We talked about how the top navbar remains active and visible across all routes, because it exists outside of the router outlet. We can apply this same principle to our routes so a portion of the route remains active even while you navigate between child routes.
+
+For example, in our application there is a Forum component that contains a header with the forum title (figure 7.4). This will remain active regardless of whether you’re looking at the list of threads or at a specific thread. You could imagine that this header bar could also contain common features, such as buttons for creating a new thread in this forum or a button to report spam.
+```
+
+```Text
+
+
+We just defined a route with the path /forums/:forum_alias. We will continue to use this path base when we start to view a specific thread inside of our forum, and we want it to be like this: /forums/:forum_alias/:thread_alias. When you look at the URL structure here, it shows that you expect both a forum and thread alias to correctly navigate, and that’s an indication of a good place to use child routes.
+
+Based on this, you can see that child routes always share their parent route’s path and extend it for a new child route. Here is a basic list showing the relationship of these various routes:
+
+    /forums — Forums component, top-level route
+    /forums/:forum_alias — Child route to show a specific forum
+    /forums/:forum_alias/:thread_alias — Also a child route of a specific forum, showing a particular thread
+
+Child routes work by creating another router outlet that’s localized to the parent component, and then all child routes will render inside of this new router outlet. Figure 7.4 shows how nested router outlets will work in our example, by having two routes and components active. There’s no limit to how many nested router outlets you could have, though in my experience I recommend no more than three, because it gets more challenging to define the correct routes with more children.
+
+Let’s start by adding this new router outlet, which should help you see where the child routes will go, and then we’ll define these routes. Open src/app/forums/forum/forum.component.html, and add a new router outlet to the bottom of the file:
+```
+
+```Typescript
+/**
+ * File: forum.component.html
+ */
+<header class="header">
+  <div class="branding">
+    <span class="title">{{forum?.title}}</span>
+  </div>
+</header>
+<router-outlet></router-outlet>
+```
+
+```TypeScript
+/**
+ * File: forums.modules.ts
+ *   Added the child routes
+ */
+const forumsRoutes: Routes = [
+  { path: 'forums', component: ForumsComponent },
+  {
+    path: 'forums/:forum_alias',
+    component: ForumComponent,
+    children: [
+      { path: '', component: ThreadsComponent },
+      { path: ':thread_alias', component: ThreadComponent }
+    ]
+  }
+];
+```
+
+```text
+Here we’ve added a new children property to the forums/:forum_alias route. This is how we denote which routes we want to load into the new router outlet of the Forum component.
+
+We’ve added two routes. The first has an empty path, and will render when we are on the parent route. That will display the list of threads that belong to the forum. The second is to display a single thread by accepting a thread alias parameter. These two routes are now child routes for the forum route.
+
+Child routes also help demonstrate how important it is to use observables when getting route parameters. Parent components remain active and onscreen even as the child components may be destroyed.
+
+Now we can round off the Thread and Threads component capabilities to load the correct data and link to threads. We’ll start by helping the Threads component load the correct list of threads to display. Open src/app/forums/threads/threads.component.ts and update it as you see in the following listing.
+```
+
+```typescript
+// We repeat  for threads and replace the link with
+<tr *ngFor="let thread of threads" [routerLink]="[thread.alias]">
+```
+
+```Text
+
+
+Notice again this is a relative link, so it will append the thread alias to the current URL, which would be like /forums/:forum_alias/:thread_alias. That will activate the correct route.
+
+Now that we can navigate to a specific thread, we just need to update the Thread component to grab the active route to have access to the parameters. This will be slightly different due to the way routes are activated, so let’s take a look. Open src/app/forums/thread/thread.component.ts and update as you see in the following listing.
+```
+
+```Typescript
+/**
+ * File: thread.component.ts
+ */
+export class ThreadComponent implements OnInit {
+  forum: Forum;
+  thread: Thread;
+
+  constructor(private route: ActivatedRoute, private forumsService: ForumsService) { }
+
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      const forum = this.route.snapshot.parent.params['forum_alias'];
+      this.thread = this.forumsService.thread(forum, params['thread_alias']);
+    });
+  }
+
+}
+```
+
+```Text
+As usual, we inject the active route and subscribe to params. But in this route we have access to the parent route information, because the currently active route information doesn’t contain all the parameters we need. The active route information contains that information, so we look at the snapshot property to dig into the parent route. Once we get it, we then use the service to load data for the thread.
+
+You may wonder why we didn’t have to do this with the other child route. Since this child route has no path (remember we defined the path as ''), it will share the params and the path with the parent route. You will need to keep that in mind as you design URLs.
+
+Make sure you’ve saved the changes and preview the application again. At this point, you should be able to click the Forum link in the top navbar to see forums, select a forum to view, and then select a specific thread. We’ve created two child routes by adding a new router outlet and defining them as children of that same route.
+
+Sometimes you need something that’s like a child route but that’s disconnected from a specific parent route. Let’s dive into secondary routes, talk about what they are, and see how you can use them.
+```
+
 ## Task: 7.6 Secondary routes
