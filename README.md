@@ -313,3 +313,49 @@ At this point, we’ve got a secondary route and a way to trigger it. View the a
 ```
 
 ## Task: 7.6.2 Navigating between secondary routes
+
+```Text
+
+
+Once you’re rendering a component inside of a secondary route, you still link different routes together using the same rules. You don’t have to specify the outlet as long as you use relative links. The context of the route will be understood by the router, so this will help simplify your links.
+
+You can change the primary route from a secondary route as long as you provide an absolute path (such as /forums). Using an absolute path from a secondary route will change the primary outlet, but the secondary route will remain at the same route.
+
+To get this working, let’s open src/app/chat-list/chat-list.component.html and update the link to start a chat. When you click a username, it sets a property called talkTo with the username. We then want to navigate to a relative path with this username, because we defined the secondary route to be /users/:username. Add the bolded routerLink to the link:
+```
+
+1. ```<a class="btn btn-sm btn-link btn-primary" *ngIf="talkTo" [routerLink]="[talkTo]">Start Chat with {{talkTo}}</a>```
+
+```Text
+
+
+
+The binding will now navigate the user to the Chat component to engage in a fun discussion with that user. But the Chat component doesn’t yet get access to the route params to know which user to talk to, so we need to add that to our Chat component.
+
+Open src/app/chat/chat.component.ts and update the constructor and ngOnInit, as you see in the following listing. The rest of the controller is focused on handling the chat experience.
+```
+
+```Typescript
+/**
+ *  Chat component accessing route params
+ */
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private chatBotService: ChatBotService,
+    private userService: UserService) { }
+
+  ngOnInit() {
+    this.route.params.subscribe((params: Params) => {
+      this.messages = [];
+      this.user = this.userService.getUser();
+      this.guest = params['username'];
+    });
+  }
+```
+
+```Text
+There is nothing new about this, except it sets up the component model to have a new chat experience. You can review the remainder of the component controller to see how it behaves, but at this point the chat box will start to work correctly. You can type a message and hit Enter, and after three seconds the other “user” will reply with some anecdote. This is obviously not a real chat experience, but I wanted to make it realistic.
+```
+
+## Task: 7.6.3 Closing a secondary route and programmatic routing
