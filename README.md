@@ -289,4 +289,27 @@ const appRoutes: Routes = [
   { path: 'users/:username', component: ChatComponent, outlet: 'chat', }, // <==
   { path: '', redirectTo: '/forums', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
-];```
+];
+```
+
+```Text
+Notice they have a path and component like other routes, but we also declare the outlet property. This is how we’ll tell the router to render this component inside of the new router outlet with the name chat. Notice we can use route params in secondary routes as well, so we’ll be able to access those params in the same way we have elsewhere. I also placed these routes before the redirect and wildcard routes, because those are meant to act like fallback routes.
+
+The top right of the application has two buttons: a speech bubble button for the chat and a logout button (which we’ll implement soon). We want to add a routerLink to the speech bubble button to open this chat box. Go back to the app.component.html file and update the link surrounding the icon like you see here in bold:
+```
+
+```TypeScript
+
+<a class="nav-link nav-icon" [routerLink]="[{outlets: { chat: ['users']}}]">
+    <clr-icon shape="talk-bubbles"></clr-icon>
+</a>
+```
+
+```Text
+
+Here we use the binding version of the attribute on the routerLink and we pass in an array with an object. The syntax here is more verbose, because we have to pass in additional data for the router to understand that this is meant to be a secondary route. The object contains the outlets property, which then has an object that maps the name of the outlet to the specific route requested. In this case, we’re passing {chat: ['users']}, which tells it to use the chat outlet, and then go to the path users. This pattern will repeat for using the secondary routes, so you’ll get to see a couple more examples of the structure.
+
+At this point, we’ve got a secondary route and a way to trigger it. View the application and click the speech bubble icon in the top right to open a new window with a list of users. It allows you to select a user to talk to but doesn’t navigate to the chat window with that user. Let’s add the ability to navigate within a secondary route now.
+```
+
+## Task: 7.6.2 Navigating between secondary routes
