@@ -12,7 +12,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   user: string;
   guest: string;
   messages: any[];
-  message: string = '';
+  message = '';
   @ViewChild('scrollBox') private scrollBox: ElementRef;
 
   constructor(
@@ -20,6 +20,10 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     private router: Router,
     private chatBotService: ChatBotService,
     private userService: UserService) { }
+
+  ngAfterViewChecked(): void {
+    throw new Error('Method not implemented.');
+  }
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
@@ -32,7 +36,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   close() { }
 
   onKeyUp(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       this.send();
     }
   }
