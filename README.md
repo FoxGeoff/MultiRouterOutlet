@@ -267,7 +267,8 @@ Sometimes you need something that’s like a child route but that’s disconnect
 ## Task: 7.6 Secondary routes
 
 ```Text
-Open src/app/app.component.html and at the bottom of the file add a new line with another router outlet. This outlet has a name attribute to allow us to target loading routes into this outlet instead of the primary outlet:
+Open src/app/app.component.html and at the bottom of the file add a new line with another router outlet.
+This outlet has a name attribute to allow us to target loading routes into this outlet instead of the primary outlet:
 ```
 
 1. ```<router-outlet name="chat"></router-outlet>```
@@ -280,3 +281,12 @@ Next we need to define some routes that will be attached to this route. They are
 
 Open src/app/app.module.ts and update the appRoutes to contain these two new routes, as you see here in bold:
 ```
+
+```TypeScript
+const appRoutes: Routes = [
+  { path: 'login', component: LoginComponent },
+  { path: 'users', component: ChatListComponent, outlet: 'chat', },       // <==
+  { path: 'users/:username', component: ChatComponent, outlet: 'chat', }, // <==
+  { path: '', redirectTo: '/forums', pathMatch: 'full' },
+  { path: '**', component: NotFoundComponent },
+];```
